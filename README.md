@@ -1,4 +1,4 @@
-#🎯 Bingo Game (HTML, CSS, JavaScript)
+# 🎯 Bingo Game (HTML, CSS, JavaScript)
 
 A fully interactive **5×5 Bingo game** built using **vanilla HTML, CSS, and JavaScript**.  
 The game follows realistic Bingo rules with manual board setup, validation, marking, undo support, and automatic Bingo detection.
