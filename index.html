@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BINGO Game</title>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-family: 'Arial Black', Arial, sans-serif;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .game-container {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+  }
+
+  h1 {
+    font-size: 64px;
+    letter-spacing: 20px;
+    margin-bottom: 10px;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7);
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #ffd700;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: repeat(5, 80px);
+    gap: 8px;
+    justify-content: center;
+    margin: 30px auto;
+  }
+
+  input {
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: 3px solid #4c1d95;
+    background: linear-gradient(145deg, #f3f4f6, #e5e7eb);
+    color: #1f2937;
+    cursor: text;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #fbbf24;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+    transform: scale(1.05);
+  }
+
+  input.readonly {
+    cursor: pointer;
+    background: linear-gradient(145deg, #ffffff, #f3f4f6);
+  }
+
+  input.readonly:hover:not(.marked) {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  }
+
+  .marked {
+    background: linear-gradient(145deg, #10b981, #059669) !important;
+    color: white !important;
+    border-color: #065f46 !important;
+    transform: scale(0.95);
+    box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+    animation: markPulse 0.3s ease;
+  }
+
+  @keyframes markPulse {
+    0%, 100% { transform: scale(0.95); }
+    50% { transform: scale(1.1); }
+  }
+
+  .controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+  }
+
+  button {
+    padding: 15px 35px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(145deg, #3b82f6, #2563eb);
+    color: white;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  button:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.6);
+  }
+
+  button:active:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  button:disabled {
+    background: linear-gradient(145deg, #6b7280, #4b5563);
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+  }
+
+  #undoBtn {
+    background: linear-gradient(145deg, #f59e0b, #d97706);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+  }
+
+  #undoBtn:hover:not(:disabled) {
+    box-shadow: 0 10px 30px rgba(245, 158, 11, 0.6);
+  }
+
+  .status {
+    margin-top: 30px;
+    font-size: 20px;
+    padding: 15px 30px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 12px;
+    display: inline-block;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+
+  .status span {
+    color: #fbbf24;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .win-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    padding: 40px 60px;
+    border-radius: 20px;
+    font-size: 48px;
+    font-weight: bold;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: winPopup 0.5s ease forwards;
+    z-index: 1000;
+  }
+
+  @keyframes winPopup {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(-180deg); }
+    70% { transform: translate(-50%, -50%) scale(1.2) rotate(10deg); }
+    100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="game-container">
+  <h1>BINGO</h1>
+  <div class="subtitle">FILL THE BOARD • MARK THE NUMBERS • WIN THE GAME</div>
+
+  <div class="board" id="board"></div>
+
+  <div class="controls">
+    <button id="confirmBtn">START GAME</button>
+    <button id="undoBtn" disabled>UNDO</button>
+  </div>
+
+  <div class="status" id="status">
+    Enter numbers 1-25 to begin
+  </div>
+</div>
+
+<script>
+const board = document.getElementById("board");
+const confirmBtn = document.getElementById("confirmBtn");
+const undoBtn = document.getElementById("undoBtn");
+const statusText = document.getElementById("status");
+
+const SIZE = 5;
+let cells = [];
+let marked = new Array(25).fill(false);
+let completedLines = new Set();
+let markHistory = [];
+let gameStarted = false;
+
+for (let i = 0; i < 25; i++) {
+  const input = document.createElement("input");
+  input.type = "number";
+  input.min = 1;
+  input.max = 25;
+
+  input.addEventListener("input", () => {
+    if (input.value > 25) input.value = "";
+  });
+
+  board.appendChild(input);
+  cells.push(input);
+}
+
+confirmBtn.onclick = () => {
+  const values = cells.map(c => Number(c.value));
+
+  if (values.some(v => !v || v < 1 || v > 25)) {
+    alert("⚠️ All numbers must be between 1 and 25");
+    return;
+  }
+
+  const unique = new Set(values);
+  if (unique.size !== 25) {
+    alert("⚠️ Duplicate numbers are not allowed");
+    return;
+  }
+
+  if (!confirm("Ready to start the game?")) return;
+
+  cells.forEach((cell, index) => {
+    cell.readOnly = true;
+    cell.classList.add("readonly");
+
+    cell.addEventListener("click", () => {
+      if (!marked[index]) {
+        marked[index] = true;
+        cell.classList.add("marked");
+        markHistory.push(index);
+        undoBtn.disabled = false;
+        checkLines();
+      }
+    });
+  });
+
+  confirmBtn.disabled = true;
+  gameStarted = true;
+  statusText.innerHTML = 'Completed Lines: <span>0</span> / 5';
+};
+
+undoBtn.onclick = () => {
+  if (markHistory.length === 0) return;
+
+  const lastIndex = markHistory.pop();
+  marked[lastIndex] = false;
+  cells[lastIndex].classList.remove("marked");
+
+  completedLines.clear();
+  checkLines();
+
+  if (markHistory.length === 0) {
+    undoBtn.disabled = true;
+  }
+};
+
+function checkLines() {
+  completedLines.clear();
+
+  for (let r = 0; r < SIZE; r++) {
+    let ok = true;
+    for (let c = 0; c < SIZE; c++) {
+      if (!marked[r * SIZE + c]) ok = false;
+    }
+    if (ok) completedLines.add(`row-${r}`);
+  }
+
+  for (let c = 0; c < SIZE; c++) {
+    let ok = true;
+    for (let r = 0; r < SIZE; r++) {
+      if (!marked[r * SIZE + c]) ok = false;
+    }
+    if (ok) completedLines.add(`col-${c}`);
+  }
+
+  let ok1 = true;
+  for (let i = 0; i < SIZE; i++) {
+    if (!marked[i * SIZE + i]) ok1 = false;
+  }
+  if (ok1) completedLines.add("diag-1");
+
+  let ok2 = true;
+  for (let i = 0; i < SIZE; i++) {
+    if (!marked[i * SIZE + (SIZE - 1 - i)]) ok2 = false;
+  }
+  if (ok2) completedLines.add("diag-2");
+
+  statusText.innerHTML = `Completed Lines: <span>${completedLines.size}</span> / 5`;
+
+  if (completedLines.size >= 5) {
+    setTimeout(() => {
+      const winMsg = document.createElement("div");
+      winMsg.className = "win-message";
+      winMsg.textContent = "🎉 BINGO! 🎉";
+      document.body.appendChild(winMsg);
+      
+      setTimeout(() => winMsg.remove(), 3000);
+    }, 100);
+  }
+}
+</script>
+
+</body>
+</html>
