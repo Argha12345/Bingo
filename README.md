@@ -1,13 +1,13 @@
-# 🎯 Bingo Game (HTML, CSS, JavaScript)
+#🎯 Bingo Game (HTML, CSS, JavaScript)
 
 A fully interactive **5×5 Bingo game** built using **vanilla HTML, CSS, and JavaScript**.  
 The game follows realistic Bingo rules with manual board setup, validation, marking, undo support, and automatic Bingo detection.
 
 ---
 
-## 🚀 Features
+ 🚀 Features
 
-### 🧩 Board Setup
+🧩 Board Setup
 - 5×5 Bingo board (25 cells)
 - Users manually enter numbers
 - **Input rules enforced:**
@@ -15,14 +15,14 @@ The game follows realistic Bingo rules with manual board setup, validation, mark
   - **Duplicate numbers are not allowed**
 - Confirmation prompt before starting the game
 
-### 🎮 Gameplay
+ 🎮 Gameplay
 - After confirmation:
   - Numbers become **read-only**
   - Cells are **clickable to mark**
   - Once marked, a cell cannot be unmarked manually
 - **Undo button** to revert the last marked cell (error recovery)
 
-### 🏆 Bingo Logic
+🏆 Bingo Logic
 - Automatically detects completed:
   - Rows
   - Columns
@@ -33,7 +33,7 @@ The game follows realistic Bingo rules with manual board setup, validation, mark
 
 ---
 
-## 🔁 Undo Functionality
+🔁 Undo Functionality
 - Undo removes the **most recently marked cell**
 - Line counts are **recalculated safely**
 - Prevents logical inconsistencies
@@ -41,7 +41,7 @@ The game follows realistic Bingo rules with manual board setup, validation, mark
 
 ---
 
-## 🛠️ Tech Stack
+ 🛠️ Tech Stack
 
 - **HTML** – Structure
 - **CSS** – Styling and layout
@@ -50,6 +50,4 @@ The game follows realistic Bingo rules with manual board setup, validation, mark
 No external libraries or frameworks used.
 
 ---
-
-## 📁 Project Structure
 
